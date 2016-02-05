@@ -1,0 +1,38 @@
+# code for q3(a)
+#generate 100 predictors
+set.seed(1)
+x<-rnorm(100,mean=0,sd=1)
+# code for q3(b)
+#generate the irreducible error
+eps<-rnorm(100,mean=0,sd=0.5)
+# code for q3(c)
+#generate the response
+y<--1+0.5*x+eps
+# code for q3(d)
+plot(x,y)
+# code for q3(e)
+lm=lm(y~x)
+summary(lm)
+# code for q3(f)
+plot(x,y,type="p",pch=1);abline(lm,col="red",lty=1)
+lines(x,-1+0.5*x,lty=1,col="blue")
+legend("topleft",c("Scatterplots","Least Square Regression Line","Population Regression Line"),col=c("black","red","blue"),pch=c(1,-1,-1),lty=c(-1,1,1),bty="n",cex=0.9)
+# code for q3(g)
+lm1<-lm(y~x+I(x^2))
+summary(lm1)
+# code for q3(h)
+eps<-rnorm(100,mean=0,sd=0.1)
+y<--1+0.5*x+eps
+plot(x,y)
+lm2=lm(y~x)
+summary(lm2)
+# code for q3(g)
+eps<-rnorm(100,mean=0,sd=2)
+y<--1+0.5*x+eps
+plot(x,y)
+lm3=lm(y~x)
+summary(lm3)
+# code for q3(j)
+confint(lm3)
+confint(lm1)
+confint(lm2)
