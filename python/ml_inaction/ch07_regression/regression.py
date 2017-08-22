@@ -1,5 +1,8 @@
 from numpy import *
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
+=======
+>>>>>>> c2eebd08a7a5a813fca48008d0ea9b9138483f10
 
 def loadDataSet(fileName):
     numFeat=len(open(fileName,'r').readline().strip().split('\t'))-1
@@ -10,6 +13,7 @@ def loadDataSet(fileName):
         lineArr=[]
         curline=line.strip().split('\t')
         for i in range(numFeat):
+<<<<<<< HEAD
             lineArr.append(float(curline[i]))
         dataMat.append(lineArr)
         labelMat.append(float(curline[-1]))
@@ -247,3 +251,13 @@ if __name__=='__main__':
     print(ws)
 
 
+=======
+            lineArr.append(curline[i])
+        dataMat.append(lineArr)
+        labelMat.append(curline[-1])
+return dataMat,labelMat
+
+
+
+if __name__=='__main__':
+>>>>>>> c2eebd08a7a5a813fca48008d0ea9b9138483f10
