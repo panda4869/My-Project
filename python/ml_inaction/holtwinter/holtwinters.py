@@ -176,17 +176,16 @@ if __name__=='__main__':
     df=pd.read_csv('data.csv',index_col=0)
     df.index=pd.to_datetime(df.index)
     x=df['leads'].tolist()
-    #print(len(x))
+    print(x)
     forecast=12
-    season_len=12
-    Y,alpha,beta,gamma,rmse,a,b,s=additive(x,m=12,fc=forecast,alpha=hw_alpha,beta=hw_beta,gamma=hw_gamma)
+    Y,alpha,beta,gamma,rmse=additive(x,m=12,fc=forecast,alpha=hw_alpha,beta=hw_beta,gamma=hw_gamma)
     newY=[np.nan]*(len(x)+forecast)
     j=1
     for i in range(len(x)-1,len(x)+forecast-2):
         newY[i]=Y[j]
         j+=1
 
-    print(alpha,beta,gamma)
+    #print(alpha,beta,gamma)
     #print (Y)
     #ix=pd.DatetimeIndex(start=df.index[0],periods=len(df)+forcast,freq='M')
     #x=pd.DataFrame(df['leads'])
@@ -194,6 +193,7 @@ if __name__=='__main__':
     plt.plot(newY,label='Prediction')
     plt.legend(loc='best')
     plt.show()
+    print (newY)
     #print(newY)
 
 
