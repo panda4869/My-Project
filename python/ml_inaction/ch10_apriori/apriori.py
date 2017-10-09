@@ -46,6 +46,8 @@ def aprioriGen(Lk,k):
         for j in range(i+1,listLen):
             L1=list(Lk[i])[:k-2];L2=list(Lk[j])[:k-2]
             L1.sort();L2.sort()
+            #print(list(Lk[i])[:1])
+            #print(list(Lk[j])[:1])
             if L1==L2:
                 retList.append(Lk[i] | Lk[j])
     return retList
@@ -65,6 +67,36 @@ def apriori(dataSet,minSupport):
 
     return L,supportData
 
+def generateRules(L,supportData,minConf=0.7):
+    bigRuleList=[]
+    for i in range(1,len(L)):
+        for freqSet in L[i]:
+            H=[frozenset([item]) for item in freqSet]
+            if i>1:
+                rulesFromConseq(freqSet,H,supportData,bigRuleList,minConf)
+            else:
+                calcConf(freqSet,H,supportData,bigRuleList,minConf)
+
+    return bigRuleList
+
+
+def calcConf(freqSet,H,supportData,brl,minConf=0.7):
+    prunedH=[]
+    for conseq in H:
+        con=supportData[freqSet]/supportData[freqSet-conseq]
+        if con>=minConf:
+            print(freqSet-conseq,' ----> ',conseq,' conf: ',con)
+            brl.append([freqSet-conseq,conseq,con])
+            prunedH.append(conseq)
+    return prunedH
+def rulesFromConseq(freqSet,H,supportData,brl,minConf=0.7):
+    m=len(H[0])
+    if (len(freqSet)>(m+1)):
+        hmp1=aprioriGen(H,m+1)
+        hmp1=calcConf(freqSet,hmp1,supportData,brl,minConf)
+        if len(hmp1)>1:
+            rulesFromConseq(freqSet,hmp1,supportData,brl,minConf)
+
 
 if __name__=='__main__':
 
@@ -77,8 +109,9 @@ if __name__=='__main__':
     #L1,supportD=scanD(dat,cc1,0.5)
     #print(aprioriGen(L1,2))
     l,supportD=apriori(dat,0.5)
-    print(l)
-    print(supportD)
+    bigl=generateRules(l,supportD,0.7)
+    print(bigl)
+    #print(supportD)
     #for i in cc1:
     #    print(i)
     #print(cc1)
