@@ -1,0 +1,5 @@
+numpy==1.14.0
+Lifetimes==0.8.1.0
+matplotlib==1.5.3
+pandas==0.22.0
+dill==0.2.7.1

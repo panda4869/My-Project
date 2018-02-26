@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>soothe1</string>
+			<key>host</key>
+			<string>soothe-read-only.cnggnechrrtc.us-east-1.rds.amazonaws.com</string>
+			<key>kcid</key>
+			<string>-4727668108650178690</string>
+			<key>name</key>
+			<string>SootheReadOnly</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string>~/Developer/soothe-stats/config/rds-combined-ca-bundle.pem</string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>1</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>1</integer>
+			<key>user</key>
+			<string>therapiststats</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8</string>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGJCVYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoKgHCBMUFRYaIVUkbnVsbNMJCgsMDxJX
+			TlMua2V5c1pOUy5vYmplY3RzViRjbGFzc6INDoACgAOiEBGABIAF
+			gAdUdHlwZVRyb3dzXxAdU2VsZWN0aW9uRGV0YWlsVHlwZU5TSW5k
+			ZXhTZXTSFwsYGVxOU1JhbmdlQ291bnQQAIAG0hscHR5aJGNsYXNz
+			bmFtZVgkY2xhc3Nlc1pOU0luZGV4U2V0oh8gWk5TSW5kZXhTZXRY
+			TlNPYmplY3TSGxwiI1xOU0RpY3Rpb25hcnmiIiBfEA9OU0tleWVk
+			QXJjaGl2ZXLRJidUZGF0YYABAAgAEQAaACMALQAyADcAQABGAE0A
+			VQBgAGcAagBsAG4AcQBzAHUAdwB8AIEAoQCmALMAtQC3ALwAxwDQ
+			ANsA3gDpAPIA9wEEAQcBGQEcASEAAAAAAAACAQAAAAAAAAAoAAAA
+			AAAAAAAAAAAAAAABIw==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {694, 450}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>select ar1.is_un,hour(session_local_time) as session_local_hour,dayname(session_local_time) as session_local_day,timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.latitude,ar.longitude,case when ar.appointment_type !='single' then 1 else 0 end as is_couple,ar.city_id,c.name as city,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request
+from appointment_requests ar
+join cities c on c.id=ar.city_id
+#join users u on ar.user_id=u.id
+
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and session_time&gt;='2016-01-01') ar1</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>145</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>select * from appointment_requests
+
+where (status='completed' or status='cancelled' and is_unfilled=1) and city_id=69</string>
+		<string>select * from appointment_requests
+
+where status='completed' and city_id=69</string>
+		<string>select * from cities</string>
+		<string>select user_id,count(*) cnt
+from appointment_requests
+where status='completed'
+group by user_id
+having cnt&gt;=100</string>
+		<string>select count(*)
+
+from appointments a
+
+join earnings e on e.appointment_id=a.id
+where  e.status='paid'</string>
+		<string>select count(*)
+
+from appointments a
+
+join earnings e on e.appointment_id=a.id
+where a.status in ('complete','reviewed','cancelled') and e.status='paid'</string>
+		<string>select count(*)
+
+from appointments a
+
+join earnings e on e.appointment_id=a.id
+where ar.status in ('complete','reviewed','cancelled') and e.status='paid'</string>
+		<string>select count(*)
+
+from appointments a
+join appointment_requests ar on a.appointment_request_id=ar.id
+join earnings e on e.appointment_id=a.id
+where ar.status in ('completed','cancelled') and e.status='paid'</string>
+		<string>select count(*)
+
+from appointments a
+join appointment_requests ar on a.appointment_request_id=ar.id
+join earnings e on e.appointment_id=a.id
+where ar.status in ('completed','cancelled')</string>
+		<string>select count(*)
+
+from appointments a
+join appointment_requests ar on a.appointment_request_id=ar.id
+join earnings e on e.appointment_id=a.id</string>
+		<string>select * from earnings where appointment_id is null and status='paid' and tip_id is null and transfer_id is null</string>
+		<string>select * from earnings where appointment_id is null and status='paid' and tip_id is null and transfer_id is not null</string>
+		<string>select * from earnings where appointment_id is null and status='paid' and tip_id is null</string>
+		<string>select case when (status='cancelled' and is_unfilled=1) then 1 else 0 end as unfilled,latitude,longitude,is_couple,city_id,city,gender_request,session_length,special_request,hour(session_local_time) as session_local_hour,dayname(session_local_time) as session_local_day,timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.latitude,ar.longitude,case when ar.appointment_type !='single' then 1 else 0 end as is_couple,ar.city_id,c.name as city,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request
+from appointment_requests ar
+join cities c on c.id=ar.city_id
+#join users u on ar.user_id=u.id
+
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and session_time&gt;='2016-01-01') ar1</string>
+		<string>select ar1.*,hour(session_local_time) as session_local_hour,dayname(session_local_time) as session_local_day,timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select ar.status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.latitude,ar.longitude,ar.appointment_type,ar.city_id,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request
+from appointment_requests ar
+#join users u on ar.user_id=u.id
+
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and session_time&gt;='2016-01-01') ar1</string>
+		<string>select ar1.*,hour(session_local_time) as session_local_hour,dayname(session_local_time) as session_local_day,timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select ar.status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.special_requests,ar.latitude,ar.longitude,ar.appointment_type,ar.city_id,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request
+from appointment_requests ar
+#join users u on ar.user_id=u.id
+
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and session_time&gt;='2016-01-01') ar1</string>
+		<string>select ar1.*,hour(session_local_time) as session_local_hour,dayname(session_local_time) as session_local_day，timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select ar.status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.special_requests,ar.latitude,ar.longitude,ar.appointment_type,ar.city_id,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request
+from appointment_requests ar
+#join users u on ar.user_id=u.id
+
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and session_time&gt;='2016-01-01') ar1</string>
+		<string>select ar1.*,hour(session_local_time) as session_local_hour,timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select ar.status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.special_requests,ar.latitude,ar.longitude,ar.appointment_type,ar.city_id,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request,
+(select sum(case when ar1.status ='completed' then 1 else 0 end)/count(*) as fill_rate 
+from appointment_requests ar1
+ where dayname(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))=dayname(convert_tz(ar.session_time,'UTC',case ar.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar.timezone end)) and date(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))&gt;=date(convert_tz(ar1.session_time-interval 1 month,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end)) and date(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))&lt;date(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))
+ and (ar1.status='completed' or (ar1.status='cancelled' and ar1.is_unfilled=1))) as fill_rate_same_period, case when uc.status in ('NULL','None') then 'B' else uc.status end as client_Rank
+from appointment_requests ar
+
+ join 
+(select user_id, status
+from user_scores
+where user_score_type_id=4
+)  uc on uc.user_id=ar.user_id
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and date(session_time)&gt;='2016-01-01' and date(session_time)&lt;='2016-01-02') ar1</string>
+		<string>select * from user_score_types</string>
+		<string>select ar1.*,hour(session_local_time) as session_local_hour,timestampdiff(hour, create_local_time,session_local_time) as interval_created_to_session_time
+from
+(select ar.status,ar.is_unfilled,convert_tz(ar.session_time,'UTC',case timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else timezone end) session_local_time,
+convert_tz(ar.created_at,'UTC',case timezone when 'Pacific Time (US &amp; Canada)'then 'America/Los_Angeles'else timezone end) create_local_time,ar.special_requests,ar.latitude,ar.longitude,ar.appointment_type,ar.city_id,
+(case appointment_type 
+    when 'couples' then case when session_gender_double_1&lt;&gt;session_gender_double_2 then 'both' else session_gender_double_1 end
+    else session_gender_single
+    end) as gender_request,
+ar.session_length,#case when ar.id in (select distinct(appointment_request_id) from therapist_preferences) then 1 else 0 end  as special_request,
+(select sum(case when ar1.status ='completed' then 1 else 0 end)/count(*) as fill_rate 
+from appointment_requests ar1
+ where dayname(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))=dayname(convert_tz(ar.session_time,'UTC',case ar.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar.timezone end)) and date(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))&gt;=date(convert_tz(ar1.session_time-interval 1 month,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end)) and date(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))&lt;date(convert_tz(ar1.session_time,'UTC',case ar1.timezone when 'Pacific Time (US &amp; Canada)' then 'America/Los_Angeles' else ar1.timezone end))
+ and (ar1.status='completed' or (ar1.status='cancelled' and ar1.is_unfilled=1))) as fill_rate_same_period, case when uc.status in ('NULL','None') then 'B' else uc.status end as client_Rank
+from appointment_requests ar
+join users u on ar.user_id=u.id
+left join 
+(select user_id, status
+from user_scores
+where user_score_type_id=4
+)  uc on uc.user_id=ar.user_id
+where (ar.status='completed' or (ar. status='cancelled' and is_unfilled=1)) and date(session_time)&gt;='2016-01-01' and date(session_time)&lt;='2016-01-02') ar1</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.6.27</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>
